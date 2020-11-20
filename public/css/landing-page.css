@@ -1,0 +1,35 @@
+.contact {
+	padding: 1rem 2rem;
+	text-align: right;
+}
+
+.contact a {
+	text-decoration: none;
+	color: white;
+}
+
+.container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 90vw;
+	max-width: 1170px;
+	margin: 0 auto;
+	min-height: 90vh;
+}
+
+.main-title {
+	font-size: 4rem;
+	margin-bottom: 2.8rem;
+}
+
+.popup-btn {
+	display: flex;
+	justify-content: space-between;
+}
+
+.yes-btn {
+	margin-right: 5rem;
+}
+
