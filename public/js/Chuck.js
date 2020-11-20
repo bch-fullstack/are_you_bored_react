@@ -5,13 +5,6 @@ const URL = 'https://api.chucknorris.io/jokes/random';
 
 JOKE_BTN.addEventListener('click', () => {
     fetch(URL)
-        .then(res => {
-            testFn();
-            res.json()
-        })
-        .then(data => JOKE_TEXT.innerHTML= dafdsfhgta.value);
+        .then(res => res.json())
+        .then(data => JOKE_TEXT.innerHTML=data.value);
 });
-
-function testFn(){
-    console.log('test')
-}

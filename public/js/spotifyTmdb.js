@@ -3,31 +3,55 @@ const controller = {
     popupModal: document.getElementById('category-popup')
 };
 
+const closePopup = () => {
+    controller.popupModal.classList.add('hide');
+    controller.popupopen = false;
+}
+
+window.addEventListener('click', (e) => {
+	if (e.target === controller.popupModal) {
+		controller.popupModal.classList.add('hide');
+	}
+});
+
+const handleOnBox = (box, searchFn) => box.addEventListener('click', (e) => {
+    debugger;
+    document.getElementById('category-list-music').innerHTML = '';
+    document.getElementById('category-list-movies').innerHTML = '';
+    controller.popupModal.classList.remove('hide');
+    controller.popupOpen = true;
+    genreId = e.target.innerText.toLowerCase();
+    searchFn(genreId);
+});
+
 //============== SPOTIFY API ==============
 
 (function () {
     const musicBoxes = document.querySelectorAll('.music');
     const clientId = '139751bc115f43329c1ed10b37f49eef';
     const clientSecret = '3a241c55178d456ca803c1b8a8ae11d6';
+    
     let token;
     let genreId;
     let tracksEndPoint;
     let spotifyListTitle;
 
     //Holds all the spotify fetch logic
-    const spotifySearch = async () => {
-
+    const spotifySearch = async (genreId) => {
         //get token neede to access Spotify api endpoints
-        const result = await fetch('https://accounts.spotify.com/api/token', {
+        const params = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Authorization': 'Basic ' + btoa(clientId + ':' + clientSecret)
             },
             body: 'grant_type=client_credentials'
-        });
+        };
+
+        const result = await fetch('https://accounts.spotify.com/api/token', params);
 
         const data = await result.json();
+
         token = data.access_token;
 
         //get first playlist based on what category has been picked
@@ -43,12 +67,8 @@ const controller = {
 
             const data = await result.json();
             const randomNumber = Math.floor(Math.random()*limit);
-            console.log(data);
-            if(!data.playlists.items[randomNumber].description){
-                spotifyListTitle = '';
-            } else {
-                spotifyListTitle = data.playlists.items[randomNumber].description;
-            }
+
+            spotifyListTitle = data.playlists.items[randomNumber].description ? data.playlists.items[randomNumber].description : '';
             
             tracksEndPoint = data.playlists.items[randomNumber].tracks.href;
 
@@ -64,6 +84,8 @@ const controller = {
                 //store the spotify links needed to be able to link to the songs to spotify
                 const spotifyURIs = [];
                 data.items.forEach(track => {
+                    if (!track.track) return;
+                    
                     if(!track.track.uri){
                         spotifyURIs.push('');
                     } else {
@@ -72,20 +94,28 @@ const controller = {
                 });
 
                 //map over the tracks and return them as html
-                let i = -1; //needed to keep track of the arrays of spotify URIs stored in the spotifyURI array
-                let html = `<h2>${spotifyListTitle}<button onClick="closePopup()" class="upper-close-btn">Close</button></h2><div class="music-content">`
-                html += data.items.map(item => {
-                    i++
-                    return `<li>
-                                <div class="music-card">
-                                    <iframe src="https://open.spotify.com/embed/track/${item.track.id}" width="300" height="100" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-                                </div>
-                            </li>`
-                }).join('');
-                html += `</div>
-                <div class="modal-footer">
-                        <input onclick="closePopup()" type="button" class="close-btn" value="Close">
-                        </div>`;
+                let counter = -1; //needed to keep track of the arrays of spotify URIs stored in the spotifyURI array
+
+                const getPopUp = spotifyListTitle => `<h2>${spotifyListTitle}<button onClick="closePopup()" class="upper-close-btn">Close</button></h2><div class="music-content">`
+                
+                const getMusicCard = id => `<li>
+                    <div class="music-card">
+                        <iframe src="https://open.spotify.com/embed/track/${id}" width="300" height="100" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                    </div>
+                </li>`
+
+                const getModalFooter = () => `</div>
+                    <div class="modal-footer">
+                    <input onclick="closePopup()" type="button" class="close-btn" value="Close">
+                </div>`;
+
+                let html = getPopUp(spotifyListTitle)
+                    + data.items.map(item => {
+                        counter++;
+                        return getMusicCard(item.track.id)
+                    }).join('')
+                    + getModalFooter();
+
                 document.getElementById('category-list-music').innerHTML = html;
             }
             getTracks(token, tracksEndPoint);
@@ -95,14 +125,7 @@ const controller = {
     }
 
     //add eventlisteners to all music category boxes
-    musicBoxes.forEach(box => box.addEventListener('click', (e) => {
-        document.getElementById('category-list-music').innerHTML = '';
-        document.getElementById('category-list-movies').innerHTML = '';
-        controller.popupModal.classList.remove('hide');
-        controller.popupOpen = true;
-        genreId = e.target.innerText.toLowerCase();
-        spotifySearch();
-    }))
+    musicBoxes.forEach(box => handleOnBox(box, spotifySearch));
 })();
 
 // =========== TMDB API ==============
@@ -126,45 +149,41 @@ const controller = {
         //fetch movies from a specified genre based on the movie revenue
         const url = `https://api.themoviedb.org/3/discover/movie?with_genres=${movieGenres[genreId]}&sort_by=revenue.desc&page=${randomNumber}&api_key=0a77033036d0112b03d5fb8d85f886b1`;
 
+        const getRecommendation = genreId => `<h2>Recommended ${genreId} movies<button onClick="closePopup()" class="upper-close-btn">Close</button></h2><div class="movies-content">`
+        
+        const getMovieCard = ({ poster_path, backdrop_path, title, overview, vote_average }) => {
+            return (poster_path || backdrop_path) ? 
+            `<li>
+                <div class="movie-card">
+                <a target=”_blank” href="https://www.amazon.com/s?k=${title}&i=shop-instant-video&ref=nb_sb_noss_2"><h4 class="movie-title">${title}<span class="movie-score"> ${vote_average}</span></h4></a>
+                    <a target=”_blank” href="https://www.amazon.com/s?k=${title}&i=shop-instant-video&ref=nb_sb_noss_2"> <img src="https://image.tmdb.org/t/p/w500/${poster_path || backdrop_path}" alt="picture of ${title}" /></a>
+                    <p class="movie-overview">${overview}</p>
+                <div>
+            </li>
+            `:
+            `<li>
+                <div class="movie-card">
+                    <h4 class="movie-title">${title} <span class="movie-score"> ${vote_average}</span></h4>
+                    <span><i class="far fa-eye-slash"></i></span>
+                </div>
+            </li>`
+        };
+
+        const getFooter = () => `</div>
+                <div class="modal-footer">
+                <input onclick="closePopup()" type="button" class="close-btn" value="Close">
+            </div>`;
+
         fetch(url)
             .then(res => res.json())
             .then((movies) => {
-                console.log(movies);
-
                 //only map over the first 10 movies in the array
                 let limit = 20;
 
                 //create html string to be injected
-                let html = `<h2>Recommended ${genreId} movies<button onClick="closePopup()" class="upper-close-btn">Close</button></h2><div class="movies-content">`
-
-                html += movies.results.slice(0, limit).map(movie => {
-
-                    const { poster_path, backdrop_path, title, overview, vote_average } = movie
-
-                    if(poster_path || backdrop_path){
-                        return `<li>
-                                    <div class="movie-card">
-                                    <a target=”_blank” href="https://www.amazon.com/s?k=${title}&i=shop-instant-video&ref=nb_sb_noss_2"><h4 class="movie-title">${title}<span class="movie-score"> ${vote_average}</span></h4></a>
-                                        <a target=”_blank” href="https://www.amazon.com/s?k=${title}&i=shop-instant-video&ref=nb_sb_noss_2"> <img src="https://image.tmdb.org/t/p/w500/${poster_path || backdrop_path}" alt="picture of ${title}" /></a>
-                                        <p class="movie-overview">${overview}</p>
-                                    <div>
-                                </li>
-                        `
-                    } else {
-                        return `<li>
-                                    <div class="movie-card">
-                                        <h4 class="movie-title">${title} <span class="movie-score"> ${vote_average}</span></h4>
-                                        <span><i class="far fa-eye-slash"></i></span>
-                                    </div>
-                                </li>`
-                    }
-                    
-                }).join(''); //join() to get rid of , (comma) in html
-
-                html += `</div>
-                        <div class="modal-footer">
-                        <input onclick="closePopup()" type="button" class="close-btn" value="Close">
-                        </div>`
+                let html = getRecommendation(genreId)
+                    + movies.results.slice(0, limit).map(movie => getMovieCard(movie)).join(''); //join() to get rid of , (comma) in html
+                    + getFooter()
 
                 document.getElementById('category-list-movies').innerHTML = html;
             })
@@ -172,23 +191,6 @@ const controller = {
     }
 
 
-    movieBoxes.forEach(box => box.addEventListener('click', (e) => {
-        document.getElementById('category-list-movies').innerHTML = '';
-        document.getElementById('category-list-music').innerHTML = '';
-        controller.popupModal.classList.remove('hide');
-        controller.popupOpen = true;
-        genreId = e.target.innerText.toLowerCase();
-        movieSearch(genreId);
-    }))
-
+    movieBoxes.forEach(box => handleOnBox(box, movieSearch));
 })();
 
-const closePopup = () => {
-    controller.popupModal.classList.add('hide');
-    controller.popupopen = false;
-}
-window.addEventListener('click', (e) => {
-	if (e.target == controller.popupModal) {
-		controller.popupModal.classList.add('hide');
-	}
-});
