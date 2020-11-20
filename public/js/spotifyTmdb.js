@@ -15,7 +15,6 @@ window.addEventListener('click', (e) => {
 });
 
 const handleOnBox = (box, searchFn) => box.addEventListener('click', (e) => {
-    debugger;
     document.getElementById('category-list-music').innerHTML = '';
     document.getElementById('category-list-movies').innerHTML = '';
     controller.popupModal.classList.remove('hide');
@@ -147,7 +146,8 @@ const handleOnBox = (box, searchFn) => box.addEventListener('click', (e) => {
     const movieSearch = (genreId) => {
         const randomNumber = Math.floor(Math.random()*50 + 1); //randomize which page (1-50) will ba shown results from
         //fetch movies from a specified genre based on the movie revenue
-        const url = `https://api.themoviedb.org/3/discover/movie?with_genres=${movieGenres[genreId]}&sort_by=revenue.desc&page=${randomNumber}&api_key=0a77033036d0112b03d5fb8d85f886b1`;
+        const API_KEY= '0a77033036d0112b03d5fb8d85f886b1'
+        const url = `https://api.themoviedb.org/3/discover/movie?with_genres=${movieGenres[genreId]}&sort_by=revenue.desc&page=${randomNumber}&api_key=${API_KEY}`;
 
         const getRecommendation = genreId => `<h2>Recommended ${genreId} movies<button onClick="closePopup()" class="upper-close-btn">Close</button></h2><div class="movies-content">`
         
@@ -176,7 +176,7 @@ const handleOnBox = (box, searchFn) => box.addEventListener('click', (e) => {
 
         fetch(url)
             .then(res => res.json())
-            .then((movies) => {
+            .then(movies => {
                 //only map over the first 10 movies in the array
                 let limit = 20;
 
