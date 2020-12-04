@@ -6,19 +6,19 @@ class Contact extends React.Component {
             <>
                 <nav>
                     <div className="logo">
-                        <a href="index.html"><span className="material-icons">home</span></a>
+                        <a htmlFor="index.html"><span className="material-icons">home</span></a>
                     Are you bored?
                 </div>
                     <div className="selection">
                         <div className="pill">
-                            <div className="pill_left_blue"><a href="yesselection.html">Yes</a></div>
+                            <div className="pill_left_blue"><a htmlFor="yesselection.html">Yes</a></div>
                             <div className="pill_right_blue"></div>
-                            <div className="pill_left_red"><a href="noselection.html">No</a></div>
+                            <div className="pill_left_red"><a htmlFor="noselection.html">No</a></div>
                             <div className="pill_right_red"></div>
                         </div>
                     </div>
                     <div className="empty">
-                        <a href="index.html"><span className="material-icons">home</span></a>
+                        <a htmlFor="index.html"><span className="material-icons">home</span></a>
                     Are you bored?
                 </div>
                 </nav>
@@ -37,7 +37,7 @@ class Contact extends React.Component {
                             <label for="message">Your message</label>
                             <textarea name="message" id="message"></textarea>
                         </div>
-                        <a href="#"><button type="submit">Send</button></a>
+                        <a htmlFor="#"><button type="submit">Send</button></a>
                     </form>
                 </main>
             </>

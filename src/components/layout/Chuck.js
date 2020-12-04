@@ -21,16 +21,16 @@ export default class Chuck extends Component {
     render() {
         return (
             <>
-                <div class="Chuck">
+                <div className="Chuck">
                     <button id="jokeBtn" onClick={this.handleClick}>Click for a joke</button>
                     {
                         this.state.data ?
-                        <p id="jokeText">
-                            {this.state.data.value}
-                        </p> :
-                        ''
+                            <p id="jokeText">
+                                {this.state.data.value}
+                            </p> :
+                            ''
                     }
-                    
+
                     <img src="./img/Chuck.png" alt="chuck" />
                 </div>
             </>
