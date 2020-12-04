@@ -1,9 +1,11 @@
 import React from 'react'
+import Header from '../layout/Header'
 
 class Contact extends React.Component {
     render() {
         return (
             <>
+                <Header />
                 <nav>
                     <div className="logo">
                         <a htmlFor="index.html"><span className="material-icons">home</span></a>
