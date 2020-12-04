@@ -42,7 +42,7 @@ class Contact extends React.Component {
                         <a htmlFor="#"><button type="submit">Send</button></a>
                     </form>
                 </main>
-            </>
+            </> 
         )
     }
 }
