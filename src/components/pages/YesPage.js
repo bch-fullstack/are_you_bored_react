@@ -13,13 +13,13 @@ export default class YesPage extends Component {
         }
     }
 
-    updateContent = content => this.setState({ content })
+    updateContent = (content, category) => this.setState({ content, category })
 
     render() {
         return (
             <>
                 <Header />
-                <Popup content={this.state.content}/>
+                <Popup content={this.state.content} category={this.state.category}/>
                 
                 {
                     Object.keys(CATEGORIES) // [books, news, movies, music]
