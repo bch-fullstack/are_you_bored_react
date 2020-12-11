@@ -2,17 +2,32 @@ import React, { Component } from 'react'
 import Header from '../layout/Header'
 import Row from '../layout/Row'
 import './YesPage.css'
-import { config } from '../../constants'
+import { CATEGORIES } from '../../constants'
+import Popup from '../layout/Popup'
 
 export default class YesPage extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            content: null
+        }
+    }
+
+    updateContent = content => this.setState({ content })
+
     render() {
         return (
             <>
                 <Header />
-                <Row title="Books" img={config.books}></Row>
-                <Row title="Movies" img={config.movies}></Row>
-                <Row title="Music" img={config.music}></Row>
-                <Row title="News" img={config.news}></Row>
+                <Popup content={this.state.content}/>
+                
+                {
+                    Object.keys(CATEGORIES) // [books, news, movies, music]
+                        .map(category => <Row 
+                                            category={category} 
+                                            subCategories={CATEGORIES[category]}
+                                            updateContent={this.updateContent}/>)
+                }
             </>
         )
     }

@@ -10,29 +10,11 @@ export const MOVIE_GENRES = {
     horror: 27
 }
 export const TMDB_API_KEY = '0a77033036d0112b03d5fb8d85f886b1';
-export const config = {
-    books: [
-        '//source.unsplash.com/1600x900/?manga',
-        '//source.unsplash.com/1600x900/?young-adult',
-        '//source.unsplash.com/1600x900/?travel',
-        '//source.unsplash.com/1600x900/?fitness">',
-    ],
-    movies: [
-        'https://source.unsplash.com/1600x900/?drama',
-        'https://source.unsplash.com/1600x900/?fantasy',
-        'https://source.unsplash.com/1600x900/?comedy',
-        'https://source.unsplash.com/1600x900/?horror',
-    ],
-    news: [
-        '//source.unsplash.com/1600x900/?news',
-        '//source.unsplash.com/1600x900/?technology',
-        '//source.unsplash.com/1600x900/?business',
-        '//source.unsplash.com/1600x900/?health',
-    ],
-    music: [
-        '//source.unsplash.com/1600x900/?rock-n-roll',
-        '//source.unsplash.com/1600x900/?pop',
-        '//source.unsplash.com/1600x900/?jazz',
-        '//source.unsplash.com/1600x900/?rap',
-    ]
+export const CATEGORIES = {
+    books: ['manga', 'young-adult', 'travel', 'fitness'],
+    movies: ['drama', 'fantasy', 'comedy', 'horror'],
+    news: ['news', 'technology', 'business', 'health'],
+    music: ['rock-n-roll', 'pop', 'jazz', 'rap']
 }
+
+export const BASE_IMG_URL = '//source.unsplash.com/1600x900/?';
