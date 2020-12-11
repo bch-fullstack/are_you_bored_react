@@ -17,4 +17,4 @@ export const CATEGORIES = {
     music: ['rock-n-roll', 'pop', 'jazz', 'rap']
 }
 
-export const BASE_IMG_URL = '//source.unsplash.com/1600x900/?';
+export const BASE_IMG_URL = '//source.unsplash.com/640x320/?';

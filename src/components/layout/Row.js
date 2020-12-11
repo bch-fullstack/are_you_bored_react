@@ -1,25 +1,17 @@
 import React from 'react'
+import Box from './Box'
 
-function Row({ title, img }) {
+function Row({ category, subCategories, updateContent }) {
     return (
         <div>
-            <h2>{title}</h2>
-            <div className={`box ${title.toLowerCase()}`} >
-                <img class="im" src={img[0]} />
-                <p class='par'>Rock</p>
-            </div>
-            <div className={`box ${title.toLowerCase()}`} >
-                <img class="im" src={img[1]} />
-                <p class='par'>Chill</p>
-            </div>
-            <div className={`box ${title.toLowerCase()}`} >
-                <img class="im" src={img[2]} />
-                <p class='par'>Jazz</p>
-            </div>
-            <div className={`box ${title.toLowerCase()}`} >
-                <img class="im" src={img[3]} />
-                <p class='par'>Hiphop</p>
-            </div>
+            <h2>{category}</h2>
+
+            {
+                subCategories.map((subCategory, i) => <Box key={i}
+                                                        category={category}
+                                                        subCategory={subCategory}
+                                                        updateContent={updateContent}/>)
+            }
         </div>
     )
 }

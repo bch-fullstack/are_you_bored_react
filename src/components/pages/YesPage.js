@@ -23,7 +23,7 @@ export default class YesPage extends Component {
                 
                 {
                     Object.keys(CATEGORIES) // [books, news, movies, music]
-                        .map(category => <Row 
+                        .map((category, i) => <Row key={i}
                                             category={category} 
                                             subCategories={CATEGORIES[category]}
                                             updateContent={this.updateContent}/>)
