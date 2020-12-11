@@ -18,3 +18,6 @@ export const CATEGORIES = {
 }
 
 export const BASE_IMG_URL = '//source.unsplash.com/640x320/?';
+export const BASE_NEWS_URL = 'https://api.nytimes.com/svc/topstories/v2';
+export const BASE_BOOKS_URL = 'https://api.nytimes.com/svc/books/v3/lists/current';
+export const NYT_APIKEY = '0IPPJhFAzYcNZJWN3eVDbeNJXmmP3zYS';
