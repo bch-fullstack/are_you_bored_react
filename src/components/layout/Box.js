@@ -18,11 +18,16 @@ function Box({category, subCategory, updateContent}) {
     }
 
     const fetchBooks = async () => {
-        const url = `${BASE_BOOKS_URL}/${subCategory}.json?api-key=${NYT_APIKEY}`;
+        const url = `${BASE_BOOKS_URL}/${subCategory}.json?api-key=${NYT_APIKEY}`; // construct the URL for API call
+        const res = await fetch(url); // wait for API resp
+        const data = await res.json(); // parse API resp as JSON, quick also returns a promise
+        const books = await getRandomObj(data.results.books, 10); // get randomly 10 books from the API resp, in json format
 
-        const res = await fetch(url);
-        const data = await res.json();
-        const books = await getRandomObj(data.results.books, 10);
+        /**
+         * for each of the books that we have picked randomly from the resp
+         * construct the following JSX syntax 
+         * study the structure of the original site.utils function in are_you_bored non React application
+         */
         return books.map(({ amazon_product_url, book_image, title, description }) => <div className="article article--books">
                 <a href={amazon_product_url}><img src={book_image} alt="" className="book-img"/></a>
                 <h4>
